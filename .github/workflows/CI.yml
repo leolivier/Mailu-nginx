@@ -67,7 +67,7 @@ jobs:
       - name: Build and optional push
         uses: docker/bake-action@v1.6.0
         with:
-          files: tests/build.hcl
+          files: ./build.hcl
           push: ${{ env.PUSH_IMAGES }}
           set: |
             "*.args.VERSION=${{ env.VERSION_FILE }}"
