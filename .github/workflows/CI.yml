@@ -61,11 +61,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - uses: crazy-max/ghaction-github-runtime@v1
       # Build and optional push
       - name: Build and optional push
-        uses: 
-          crazy-max/ghaction-github-runtime@v1
-          docker/bake-action@v1.7.0
+        uses: docker/bake-action@v1.7.0
 #        uses: docker/bake-action@v1.6.0
         with:
           files: ./build.hcl
