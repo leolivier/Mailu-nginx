@@ -45,11 +45,6 @@ jobs:
           VERSION_FILE="Source: https://github.com/$GITHUB_REPOSITORY Branch: $GITHUB_REF_NAME Tag: $PINNED_MAILU_VERSION Hash: $GITHUB_SHA"
           echo "VERSION_FILE=$VERSION_FILE"
           echo "VERSION_FILE=$VERSION_FILE" >> $GITHUB_ENV
-      - name: Create folder for storing images
-        run: |
-          sudo mkdir -p /tmp/buildx-images
-          sudo chmod 777 /tmp/buildx-images
-
       # QEMU setup
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
