@@ -32,10 +32,9 @@ target "front" {
   dockerfile="Dockerfile"
   context="."
   tags = tag("nginx")
-  cache-to  = [ "type=local,dest=/tmp/buildx-cache"]
   cache-from = [
     "user/app:cache",
     "type=local,src =/tmp/buildx-cache"
   ]
-
+  cache-to = ["type=local,dest=/tmp/buildx-cache"]
 }
