@@ -95,6 +95,6 @@ jobs:
           name: my-build-env
           path: /tmp/github_other_env
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R /tmp/github_other_env
       - name: CI/CD succeeded.
         run: exit 0
