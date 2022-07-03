@@ -29,4 +29,4 @@ cd $(dirname $0)
 #docker run --privileged --rm tonistiigi/binfmt:latest --install arm64,arm
 docker run --privileged --rm linuxkit/binfmt:v0.8
 set -x
-docker buildx bake -f ./build.hcl --progress plain $NOCACHE $PUSH $PLATFORMS
+docker buildx bake --progress plain $NOCACHE $PUSH $PLATFORMS
