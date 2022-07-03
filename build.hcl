@@ -18,11 +18,6 @@ group "default" {
   ]
 }
 
-target "defaults" {
-  platforms = [ "linux/amd64", "linux/arm64", "linux/arm/v7" ]
-  dockerfile="Dockerfile"
-}
-
 # -----------------------------------------------------------------------------------------
 function "tag" {
   params = [image_name]
@@ -33,7 +28,13 @@ function "tag" {
 }
 
 target "front" {
-  inherits = ["defaults"]
+  platforms = [ "linux/amd64", "linux/arm64", "linux/arm/v7" ]
+  dockerfile="Dockerfile"
   context="."
   tags = tag("nginx")
+  cache-from = [
+    "user/app:cache",
+    "type=local,src =/tmp/buildx-cache"
+  ]
+  cache-to = ["type=local,dest=/tmp/buildx-cache"]
 }
