@@ -71,7 +71,8 @@ jobs:
             "*.args.pinned_version=${{ env.VERSION_FILE }}"
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max
-# for testing          
+# for testing
+      - run: cat $GITHUB_ENV    
       - name: save env in cache
         uses: actions/upload-artifact@v3
         with:
