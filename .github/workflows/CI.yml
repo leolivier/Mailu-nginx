@@ -17,7 +17,7 @@ env:
   DOCKER_ORG: "leolivier"
   DOCKER_PREFIX: "mailu-"
   PINNED_MAILU_VERSION: "1.9-multiarch"
-  PUSH_IMAGES: ${{ github.event_name == 'release' }}
+#  PUSH_IMAGES: ${{ github.event_name == 'release' }}
 ## force push temporarily until push on release is working
 #  PUSH_IMAGES: true 
   MAILU_TAG: ${{ github.ref_name }}
@@ -36,7 +36,8 @@ jobs:
 
       # Checkout
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+#        uses: actions/checkout@v2
 
       # Create /version file
       - name: Create version file
@@ -64,10 +65,17 @@ jobs:
 
       # Build and optional push
       - name: Build and optional push
-        uses: docker/bake-action@v1.6.0
+        uses: 
+        - crazy-max/ghaction-github-runtime@v1
+        - docker/bake-action@v1.7.0
+#        uses: docker/bake-action@v1.6.0
         with:
           files: ./build.hcl
-          push: ${{ env.PUSH_IMAGES }}
+          push: ${{ github.event_name == 'release' }}
+#          push: ${{ env.PUSH_IMAGES }}
           set: |
             "*.args.VERSION=${{ env.VERSION_FILE }}"
             "*.args.pinned_version=${{ env.VERSION_FILE }}"
+            *.cache-from=type=gha
+            *.cache-to=type=gha,mode=max
+          
