@@ -72,12 +72,12 @@ jobs:
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max
 # for testing
-      - run: cat $GITHUB_ENV    
+      - run: cat $GITHUB_ENV > /tmp/github_build_env
       - name: save env in cache
         uses: actions/upload-artifact@v3
         with:
           name: my-build-env
-          path: $GITHUB_ENV
+          path: /tmp/github_build_env
 
 # This job is watched by bors. It only complets if building,testing and deploy worked.
   ci-success:
@@ -93,9 +93,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: my-build-env
-          path: $GITHUB_ENV
+          path: /tmp/github_other_env
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: $GITHUB_ENV
       - name: CI/CD succeeded.
         run: exit 0
