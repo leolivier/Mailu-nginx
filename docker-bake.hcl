@@ -1,3 +1,13 @@
+#### SPECIFIC VARIABLES MUST BE SPECIFIED IN OVERRIDE FILE
+variable "DEFAULT_TARGET" {
+  default = ""
+}
+variable "DEFAULT_IMAGE" {
+  default = ""
+}
+
+
+#### COMMON VARIABLES
 variable "DOCKER_ORG" {
   default = "mailu"
 }
@@ -14,19 +24,13 @@ variable "MAILU_TAG" {
 # -----------------------------------------------------------------------------------------
 group "default" {
   targets = [
-    "front"
+    "default"
   ]
 }
 
 target "defaults" {
   platforms = [ "linux/amd64", "linux/arm64", "linux/arm/v7" ]
   dockerfile="Dockerfile"
-  cache-from = [
-    "user/app:cache",
-    "type=local,src=/tmp/buildx-cache"
-  ]
-  cache-to = ["type=local,dest=/tmp/buildx-cache"]
-  context="."
 }
 
 # -----------------------------------------------------------------------------------------
@@ -38,7 +42,26 @@ function "tag" {
           ]
 }
 
-target "front" {
+# -----------------------------------------------------------------------------------------
+function "cache-from" {
+  params = [target]
+  result = [
+    "user/app:cache",
+    "type=local,src=/tmp/buildx-cache-${target}"
+  ]
+}
+
+# -----------------------------------------------------------------------------------------
+function "cache-to" {
+  params = [target]
+  result = ["type=local,dest=/tmp/buildx-cache-${target}"]
+}
+
+
+
+target "default" {
   inherits = ["defaults"]
-  tags = tag("nginx")
+  tags = tag("${DEFAULT_IMAGE}")
+  cache-from = cache-from("${DEFAULT_TARGET}")
+  cache-to = cache-to("${DEFAULT_TARGET}")
 }
