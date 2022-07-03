@@ -58,10 +58,6 @@ jobs:
             "*.args.pinned_version=${{ env.VERSION_FILE }}"
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max
-# for testing
-    outputs:
-      MAILU_TAG: ${{env.MAILU_TAG}}
-      VERSION_FILE: ${{ env.VERSION_FILE }}
 # This job is watched by bors. It only complets if building,testing and deploy worked.
   ci-success:
     name: CI-Done
@@ -71,10 +67,5 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-    # for testing
-      - name: show cached envt
-        run: |
-          echo MAILU_TAG=${{needs.build.outputs.MAILU_TAG}}
-          echo VERSION_FILE=${{needs.build.outputs.VERSION_FILE}}
       - name: CI/CD succeeded.
         run: exit 0
