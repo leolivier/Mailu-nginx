@@ -96,8 +96,5 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: $GITHUB_ENV
-    
-- name: Display structure of downloaded files
-  run: ls -R
       - name: CI/CD succeeded.
         run: exit 0
