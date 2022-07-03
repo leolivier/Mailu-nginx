@@ -48,7 +48,7 @@ jobs:
     name: Build images
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           # fetch-depth 0 is required to also retrieve all tags.
           fetch-depth: 0
@@ -116,22 +116,16 @@ jobs:
         with:
           username: ${{ secrets.Docker_Login }}
           password: ${{ secrets.Docker_Password }}
-      - name: Build nginx multiarch docker images
-        env:
-          MAILU_VERSION: ${{ env.MAILU_VERSION }}
-          PINNED_MAILU_VERSION: ${{ env.PINNED_MAILU_VERSION }}
-          DOCKER_ORG: ${{ env.DOCKER_ORG }}
-        run: docker buildx bake
-      - name: Save docker image
-        run: docker save ${{ env.DOCKER_ORG }}/nginx -o /images/nginx-image.tar.gz
+      - uses: crazy-max/ghaction-github-runtime@v1
       - name: Build and optionally push
-        uses: docker/bake-action@v1.6.0
+        uses: docker/bake-action@v1.7.0
         with:
-          files: ./build.hcl
           push: ${{ env.PUSH_IMAGES }}
           set: |
             "*.args.VERSION=${{ env.VERSION_FILE }}"
             "*.args.pinned_version=${{ env.VERSION_FILE }}"
+            *.cache-from=type=gha
+            *.cache-to=type=gha,mode=max
 
 
 # This job is watched by bors. It only complets if building,testing and deploy worked.
