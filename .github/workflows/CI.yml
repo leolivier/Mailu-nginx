@@ -72,13 +72,9 @@ jobs:
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max
 # for testing
-      - run: cat $GITHUB_ENV > /tmp/github_build_env
-      - name: save env in cache
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-build-env
-          path: /tmp/github_build_env
-
+      outputs:
+        MAILU_TAG: ${{env.MAILU_TAG}}
+        VERSION_FILE: ${{ env.VERSION_FILE }}
 # This job is watched by bors. It only complets if building,testing and deploy worked.
   ci-success:
     name: CI-Done
@@ -89,12 +85,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # for testing
-      - name: retrieve cached envt
-        uses: actions/download-artifact@v3
-        with:
-          name: my-build-env
-          path: /tmp/github_other_env
-      - name: Display structure of downloaded files
-        run: cat /tmp/github_other_env/github_build_env
+      - name: show cached envt
+        run: |
+          echo MAILU_TAG=${{needs.build.outputs.MAILU_TAG}}
+          echo VERSION_FILE=${{needs.build.outputs.VERSION_FILE}}
       - name: CI/CD succeeded.
         run: exit 0
